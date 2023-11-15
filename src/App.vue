@@ -1,28 +1,43 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-main>
+      <v-snackbar
+        v-model="mSnackbar.show" 
+        bottom="bottom" 
+        multi-line="multi-line" 
+        :timeout="4000" 
+        :vertical="true">
+        {{ mSnackbar.message }}<br/>
+        <v-btn v-if="mSnackbar.button" @click="sendotp" color="primary">Click here to send out new OTP</v-btn>
+      </v-snackbar>
+      <component
+        :is="layout"
+      >
+        <router-view/>
+      </component>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+const defaultLayout = 'default';
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  components: {
+  },
+  computed: {
+    layout(){
+      return (this.$route.meta.layout || defaultLayout) + '-layout';
+    },
+    ...mapGetters({
+      mSnackbar:            'auth/mSnackbar' 
+    })
+  },
+  data: () => ({
+    //
+  }),
+};
+</script>
